@@ -23,4 +23,9 @@ class PostRepository
     {
         return $post->update($data);
     }
+
+    public function deletePost($post)
+    {
+        return $post->delete();
+    }
 }

@@ -75,8 +75,10 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Post $post)
     {
-        //
+        $this->postService->deletePost($post);
+
+        return redirect()->route('posts.index')->with('success', '文章已刪除');
     }
 }

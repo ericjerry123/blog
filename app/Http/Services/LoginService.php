@@ -15,4 +15,13 @@ class LoginService
 
         return redirect()->route('posts.index');
     }
+
+    public function logout()
+    {
+        Auth::logout();
+
+        session()->invalidate();
+
+        session()->regenerateToken();
+    }
 }

@@ -2,7 +2,23 @@
     <div class="container mx-auto px-4 py-8">
         <x-session-alerts />
 
-        <x-posts.header :title="'部落格文章'" />
+        <div class="flex justify-between items-center mb-6">
+            <x-posts.header :title="'部落格文章'" />
+
+            <!-- 重新設計的登出按鈕 -->
+            <div class="flex items-center">
+                <span class="mr-2 text-gray-600">{{ Auth::user()->name ?? '使用者' }}</span>
+                <form action="{{ route('logout') }}" method="POST" class="inline">
+                    @csrf
+                    <button type="submit" class="flex items-center px-3 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                        登出
+                    </button>
+                </form>
+            </div>
+        </div>
 
         <!-- 搜尋、排序和分類表單 -->
         <div class="mb-8 bg-white p-6 rounded-lg shadow-sm">

@@ -23,7 +23,7 @@ class StoreRegisterRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:users,email',
             'password' => 'required|confirmed',
         ];
     }
@@ -34,6 +34,7 @@ class StoreRegisterRequest extends FormRequest
             'name.required' => '用戶名是必填的',
             'email.required' => 'Email 是必填的',
             'email.email' => 'Email 格式不正確',
+            'email.unique' => 'Email 已存在',
             'password.required' => '密碼是必填的',
             'password.confirmed' => '密碼不一致',
         ];

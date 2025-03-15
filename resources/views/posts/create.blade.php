@@ -4,10 +4,7 @@
 
         <div class="card bg-base-100 shadow-xl">
             <div class="card-body">
-                <div class="flex justify-between items-center">
-                    <h1 class="card-title text-2xl">新增文章</h1>
-                    <a href="{{ route('posts.index') }}" class="hover:text-primary">返回</a>
-                </div>
+                <x-posts.page-header title="新增文章" />
 
                 <form action="{{ route('posts.store') }}" method="POST" class="mt-4">
                     @csrf
@@ -18,10 +15,7 @@
 
                     <x-form.input name="content" label="內容" type="textarea" :value="old('content')" />
 
-                    <div class="card-actions justify-end mt-6">
-                        <a href="{{ route('posts.index') }}" class="btn btn-sm">取消</a>
-                        <button type="submit" class="btn btn-sm btn-accent">新增文章</button>
-                    </div>
+                    <x-form.buttons submitText="新增文章" />
                 </form>
             </div>
         </div>

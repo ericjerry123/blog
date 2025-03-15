@@ -24,6 +24,13 @@ class PostService
         return $this->postRepository->getPostById($id);
     }
 
+    public function createPost($data)
+    {
+        $data['user_id'] = auth()->user()->id;
+
+        return $this->postRepository->createPost($data);
+    }
+
     public function updatePost($post, $data)
     {
         return $this->postRepository->updatePost($post, $data);

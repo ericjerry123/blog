@@ -19,6 +19,11 @@ class PostRepository
         return Post::find($id);
     }
 
+    public function createPost($data)
+    {
+        return Post::create($data);
+    }
+
     public function updatePost($post, $data)
     {
         return $post->update($data);

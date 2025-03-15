@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Http\Services\PostService;
 use App\Models\Post;
@@ -31,15 +32,17 @@ class PostController extends Controller
      */
     public function create()
     {
-        // return view('posts.create');
+        return view('posts.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StorePostRequest $request)
     {
-        //
+        $this->postService->createPost($request->all());
+
+        return redirect()->route('posts.index')->with('success', '文章已建立');
     }
 
     /**

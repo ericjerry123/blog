@@ -1,5 +1,15 @@
 <x-layouts.app>
-    <h1>文章列表</h1>
+    <div class="container mx-auto px-4 py-8">
+        <x-session-alerts />
 
-    <p>{{ Auth::user()->name }}</p>
+        <x-posts.header :title="'部落格文章'" />
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            @foreach ($posts as $post)
+                <x-posts.card :post="$post" />
+            @endforeach
+        </div>
+
+        <x-posts.pagination :paginator="$posts" />
+    </div>
 </x-layouts.app>

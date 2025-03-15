@@ -46,6 +46,6 @@ class LoginController extends Controller
     {
         $this->loginService->logout();
 
-        return redirect()->route('login')->with('success', '登出成功');
+        return redirect()->route('login.create')->with('success', '登出成功');
     }
 }

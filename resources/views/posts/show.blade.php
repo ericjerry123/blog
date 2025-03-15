@@ -20,5 +20,12 @@
 
             <x-posts.actions :post="$post" />
         </div>
+
+        <!-- 留言區塊 -->
+        <div class="mt-8">
+            <x-comments.list :comments="$comments" :postId="$post->id" />
+        </div>
     </div>
+
+    @stack('scripts')
 </x-layouts.app>

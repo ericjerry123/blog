@@ -10,6 +10,6 @@
             @endforeach
         </div>
 
-        <x-posts.pagination :currentPage="1" />
+        <x-posts.pagination :paginator="$posts" />
     </div>
 </x-layouts.app>

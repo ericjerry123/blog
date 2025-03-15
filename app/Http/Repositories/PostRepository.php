@@ -11,12 +11,12 @@ class PostRepository
      */
     public function getAllPosts()
     {
-        return Post::all();
+        return Post::with('user')->paginate(10);
     }
 
     public function getPostById($id)
     {
-        return Post::find($id);
+        return Post::with('user')->find($id);
     }
 
     public function createPost($data)

@@ -7,12 +7,14 @@ use App\Models\Post;
 class PostRepository
 {
     /**
-     * 取得所有文章，支援搜尋功能
+     * 取得所有文章，支援搜尋和排序功能
      *
      * @param string|null $searchTerm 搜尋關鍵字
+     * @param string $sortField 排序欄位
+     * @param string $sortDirection 排序方向
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
-    public function getAllPosts($searchTerm = null)
+    public function getAllPosts($searchTerm = null, $sortField = 'created_at', $sortDirection = 'desc')
     {
         $query = Post::with('user');
 
@@ -20,7 +22,10 @@ class PostRepository
             $this->searchPosts($query, $searchTerm);
         }
 
-        return $query->latest()->paginate(10);
+        // 應用排序
+        $query->orderBy($sortField, $sortDirection);
+
+        return $query->paginate(10);
     }
 
     /**

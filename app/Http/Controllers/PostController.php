@@ -23,9 +23,26 @@ class PostController extends Controller
     public function index(Request $request)
     {
         $searchTerm = $request->input('search');
-        $posts = $this->postService->getAllPosts($searchTerm);
 
-        return view('posts.index', compact('posts', 'searchTerm'));
+        // 獲取排序參數
+        $sortField = $request->input('sort_field', 'created_at');
+        $sortDirection = $request->input('sort_direction', 'desc');
+
+        // 驗證排序欄位，確保安全
+        $allowedSortFields = ['created_at', 'title', 'updated_at'];
+        if (!in_array($sortField, $allowedSortFields)) {
+            $sortField = 'created_at';
+        }
+
+        // 驗證排序方向
+        $allowedSortDirections = ['asc', 'desc'];
+        if (!in_array($sortDirection, $allowedSortDirections)) {
+            $sortDirection = 'desc';
+        }
+
+        $posts = $this->postService->getAllPosts($searchTerm, $sortField, $sortDirection);
+
+        return view('posts.index', compact('posts', 'searchTerm', 'sortField', 'sortDirection'));
     }
 
     /**

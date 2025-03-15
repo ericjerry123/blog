@@ -14,9 +14,17 @@ class PostService
         $this->postRepository = $postRepository;
     }
 
-    public function getAllPosts($searchTerm = null)
+    /**
+     * 取得所有文章，支援搜尋和排序
+     *
+     * @param string|null $searchTerm 搜尋關鍵字
+     * @param string $sortField 排序欄位
+     * @param string $sortDirection 排序方向
+     * @return \Illuminate\Pagination\LengthAwarePaginator
+     */
+    public function getAllPosts($searchTerm = null, $sortField = 'created_at', $sortDirection = 'desc')
     {
-        return $this->postRepository->getAllPosts($searchTerm);
+        return $this->postRepository->getAllPosts($searchTerm, $sortField, $sortDirection);
     }
 
     public function getPostById($id)

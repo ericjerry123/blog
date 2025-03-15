@@ -2,20 +2,22 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Post;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdatePostRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * 判斷用戶是否有權限進行此請求
      */
     public function authorize(): bool
     {
-        return true;
+        $post = $this->route('post');
+        return $this->user()->can('update', $post);
     }
 
     /**
-     * Get the validation rules that apply to the request.
+     * 獲取適用於請求的驗證規則
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
@@ -23,6 +25,7 @@ class UpdatePostRequest extends FormRequest
     {
         return [
             'title' => 'required|string|max:255',
+            'excerpt' => 'nullable|string',
             'content' => 'required|string',
         ];
     }

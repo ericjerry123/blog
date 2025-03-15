@@ -14,9 +14,9 @@ class PostService
         $this->postRepository = $postRepository;
     }
 
-    public function getAllPosts()
+    public function getAllPosts($searchTerm = null)
     {
-        return $this->postRepository->getAllPosts();
+        return $this->postRepository->getAllPosts($searchTerm);
     }
 
     public function getPostById($id)

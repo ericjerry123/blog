@@ -20,11 +20,12 @@ class PostController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $posts = $this->postService->getAllPosts();
+        $searchTerm = $request->input('search');
+        $posts = $this->postService->getAllPosts($searchTerm);
 
-        return view('posts.index', compact('posts'));
+        return view('posts.index', compact('posts', 'searchTerm'));
     }
 
     /**

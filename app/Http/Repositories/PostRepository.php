@@ -7,11 +7,39 @@ use App\Models\Post;
 class PostRepository
 {
     /**
-     * 取得所有文章
+     * 取得所有文章，支援搜尋功能
+     *
+     * @param string|null $searchTerm 搜尋關鍵字
+     * @return \Illuminate\Pagination\LengthAwarePaginator
      */
-    public function getAllPosts()
+    public function getAllPosts($searchTerm = null)
     {
-        return Post::with('user')->paginate(10);
+        $query = Post::with('user');
+
+        if ($searchTerm) {
+            $this->searchPosts($query, $searchTerm);
+        }
+
+        return $query->latest()->paginate(10);
+    }
+
+    /**
+     * 在查詢中增加搜尋條件
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string $searchTerm
+     * @return void
+     */
+    public function searchPosts($query, $searchTerm)
+    {
+        if (!$searchTerm) {
+            return;
+        }
+
+        $query->where(function($q) use ($searchTerm) {
+            $q->where('title', 'like', "%{$searchTerm}%")
+              ->orWhere('content', 'like', "%{$searchTerm}%");
+        });
     }
 
     public function getPostById($id)

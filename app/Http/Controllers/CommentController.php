@@ -16,6 +16,9 @@ class CommentController extends Controller
     {
         $this->commentService = $commentService;
         $this->middleware('auth');
+        $this->authorizeResource(Comment::class, 'comment', [
+            'except' => ['store']
+        ]);
     }
 
     /**
@@ -25,6 +28,7 @@ class CommentController extends Controller
     {
         $validatedData = $request->validated();
 
+        $this->authorize('create', Comment::class);
         $this->commentService->createComment($validatedData);
 
         return redirect()->back()->with('success', '留言已發布');
@@ -35,11 +39,7 @@ class CommentController extends Controller
      */
     public function edit(Comment $comment)
     {
-        // 驗證用戶是否有權編輯留言
-        if ($comment->user_id !== auth()->id()) {
-            return redirect()->back()->with('error', '您無權編輯此留言');
-        }
-
+        // Policy 已通過 authorizeResource 自動檢查授權
         return view('comments.edit', compact('comment'));
     }
 
@@ -52,11 +52,8 @@ class CommentController extends Controller
             'content' => 'required|string|min:2|max:1000',
         ]);
 
-        $result = $this->commentService->updateComment($comment, $request->only('content'));
-
-        if (!$result) {
-            return redirect()->back()->with('error', '您無權更新此留言');
-        }
+        // Policy 已通過 authorizeResource 自動檢查授權
+        $this->commentService->updateComment($comment, $request->only('content'));
 
         return redirect()->route('posts.show', $comment->post_id)->with('success', '留言已更新');
     }
@@ -66,11 +63,8 @@ class CommentController extends Controller
      */
     public function destroy(Comment $comment)
     {
-        $result = $this->commentService->deleteComment($comment);
-
-        if (!$result) {
-            return redirect()->back()->with('error', '您無權刪除此留言');
-        }
+        // Policy 已通過 authorizeResource 自動檢查授權
+        $this->commentService->deleteComment($comment);
 
         return redirect()->back()->with('success', '留言已刪除');
     }

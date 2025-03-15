@@ -48,11 +48,6 @@ class CommentService
      */
     public function updateComment(Comment $comment, $data)
     {
-        // 檢查用戶是否有權更新留言
-        if ($comment->user_id !== auth()->id()) {
-            return false;
-        }
-
         return $this->commentRepository->updateComment($comment, $data);
     }
 
@@ -64,11 +59,6 @@ class CommentService
      */
     public function deleteComment(Comment $comment)
     {
-        // 檢查用戶是否有權刪除留言
-        if ($comment->user_id !== auth()->id()) {
-            return false;
-        }
-
         return $this->commentRepository->deleteComment($comment);
     }
 }

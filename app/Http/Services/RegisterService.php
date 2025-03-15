@@ -21,8 +21,6 @@ class RegisterService
      */
     public function register(array $credentials)
     {
-        $credentials['password'] = Hash::make($credentials['password']);
-
         $this->registerRepository->register($credentials);
     }
 }

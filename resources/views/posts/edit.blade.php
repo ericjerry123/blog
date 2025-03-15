@@ -1,5 +1,7 @@
 <x-layouts.app>
     <div class="container mx-auto px-4 py-8">
+        <x-session-alerts />
+
         <div class="card bg-base-100 shadow-xl">
             <div class="card-body">
                 <div class="flex justify-between items-center">
@@ -11,17 +13,13 @@
                     @csrf
                     @method('PUT')
 
-                    <div class="mb-4">
-                        <label for="title" class="block text-sm font-medium text-gray-700 mb-1">標題</label>
-                        <input type="text" id="title" name="title" value="{{ $post->title }}"
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary">
-                    </div>
+                    <x-form.input name="title" label="標題" :value="$post->title" />
 
-                    <div class="mb-4">
-                        <label for="content" class="block text-sm font-medium text-gray-700 mb-1">內容</label>
-                        <textarea id="content" name="content" rows="6"
-                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary">{{ $post->content }}</textarea>
-                    </div>
+                    @if(isset($post->excerpt))
+                        <x-form.input name="excerpt" label="摘要" type="textarea" :value="$post->excerpt" />
+                    @endif
+
+                    <x-form.input name="content" label="內容" type="textarea" :value="$post->content" />
 
                     <div class="card-actions justify-end mt-6">
                         <a href="{{ route('posts.index') }}" class="btn btn-sm">取消</a>

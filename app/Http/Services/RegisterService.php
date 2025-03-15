@@ -3,7 +3,6 @@
 namespace App\Http\Services;
 
 use App\Http\Repositories\RegisterRepository;
-use Illuminate\Support\Facades\Hash;
 
 class RegisterService
 {

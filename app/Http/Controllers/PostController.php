@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdatePostRequest;
 use App\Http\Services\PostService;
+use App\Models\Post;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -55,15 +57,19 @@ class PostController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $post = $this->postService->getPostById($id);
+
+        return view('posts.edit', compact('post'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdatePostRequest $request, Post $post)
     {
-        //
+        $this->postService->updatePost($post, $request->all());
+
+        return redirect()->route('posts.index')->with('success', '文章已更新');
     }
 
     /**

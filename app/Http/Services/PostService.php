@@ -23,4 +23,9 @@ class PostService
     {
         return $this->postRepository->getPostById($id);
     }
+
+    public function updatePost($post, $data)
+    {
+        return $this->postRepository->updatePost($post, $data);
+    }
 }

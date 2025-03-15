@@ -18,4 +18,9 @@ class PostRepository
     {
         return Post::find($id);
     }
+
+    public function updatePost($post, $data)
+    {
+        return $post->update($data);
+    }
 }

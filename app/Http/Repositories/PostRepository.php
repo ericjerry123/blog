@@ -13,4 +13,9 @@ class PostRepository
     {
         return Post::all();
     }
+
+    public function getPostById($id)
+    {
+        return Post::find($id);
+    }
 }

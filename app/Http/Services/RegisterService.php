@@ -3,7 +3,6 @@
 namespace App\Http\Services;
 
 use App\Http\Repositories\RegisterRepository;
-use Illuminate\Support\Facades\Hash;
 
 class RegisterService
 {
@@ -21,8 +20,6 @@ class RegisterService
      */
     public function register(array $credentials)
     {
-        $credentials['password'] = Hash::make($credentials['password']);
-
         $this->registerRepository->register($credentials);
     }
 }

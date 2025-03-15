@@ -49,7 +49,7 @@ class PostRepository
 
     public function getPostById($id)
     {
-        return Post::with('user')->find($id);
+        return Post::with(['user', 'comments.user', 'comments.replies.user'])->find($id);
     }
 
     public function createPost($data)

@@ -69,8 +69,10 @@ class PostController extends Controller
     public function show(string $id)
     {
         $post = $this->postService->getPostById($id);
+        // 獲取文章的留言
+        $comments = $post->comments()->with(['user', 'replies.user'])->orderBy('created_at', 'desc')->get();
 
-        return view('posts.show', compact('post'));
+        return view('posts.show', compact('post', 'comments'));
     }
 
     /**

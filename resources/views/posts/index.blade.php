@@ -4,9 +4,9 @@
 
         <x-posts.header :title="'部落格文章'" />
 
-        <!-- 搜尋和排序表單 -->
-        <div class="mb-8">
-            <form action="{{ route('posts.index') }}" method="GET" class="space-y-4">
+        <!-- 搜尋、排序和分類表單 -->
+        <div class="mb-8 bg-white p-6 rounded-lg shadow-sm">
+            <form action="{{ route('posts.index') }}" method="GET" class="space-y-6">
                 <!-- 搜尋欄位 -->
                 <div class="flex items-center">
                     <div class="relative flex-grow">
@@ -30,9 +30,27 @@
                     @endif
                 </div>
 
+                <!-- 分類過濾 -->
+                <div>
+                    <h3 class="text-gray-700 font-medium mb-3">文章分類</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <a href="{{ route('posts.index', ['search' => $searchTerm ?? '', 'sort_field' => $sortField ?? 'created_at', 'sort_direction' => $sortDirection ?? 'desc']) }}"
+                           class="px-4 py-2 rounded-full text-sm {{ !isset($activeCategory) ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }}">
+                            全部
+                        </a>
+
+                        @foreach($categories as $category)
+                            <a href="{{ route('posts.index', ['category' => $category->id, 'search' => $searchTerm ?? '', 'sort_field' => $sortField ?? 'created_at', 'sort_direction' => $sortDirection ?? 'desc']) }}"
+                               class="px-4 py-2 rounded-full text-sm {{ isset($activeCategory) && $activeCategory->id == $category->id ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }}">
+                                {{ $category->name }}
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+
                 <!-- 排序選項 -->
-                <div class="flex flex-wrap items-center gap-4">
-                    <span class="text-gray-700">排序方式：</span>
+                <div class="flex flex-wrap items-center gap-4 border-t pt-4">
+                    <h3 class="text-gray-700 font-medium">排序方式：</h3>
 
                     <!-- 排序欄位選擇 -->
                     <div class="flex items-center">
@@ -51,22 +69,30 @@
                         </select>
                     </div>
 
-                    <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                    <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
                         套用排序
                     </button>
 
                     @if((isset($sortField) && $sortField != 'created_at') || (isset($sortDirection) && $sortDirection != 'desc'))
-                        <a href="{{ route('posts.index', ['search' => $searchTerm ?? '']) }}" class="px-3 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">
+                        <a href="{{ route('posts.index', ['search' => $searchTerm ?? '', 'category' => $activeCategory->id ?? null]) }}" class="px-3 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
                             重設排序
                         </a>
                     @endif
                 </div>
 
-                @if(isset($searchTerm) && $searchTerm)
-                    <div class="text-sm text-gray-600">
-                        搜尋: "{{ $searchTerm }}" - 找到 {{ $posts->total() }} 篇文章
+                <div class="text-sm text-gray-600 border-t pt-4">
+                    <div class="flex flex-wrap gap-x-2">
+                        @if(isset($searchTerm) && $searchTerm)
+                            <span>搜尋: <strong>"{{ $searchTerm }}"</strong></span>
+                        @endif
+
+                        @if(isset($activeCategory))
+                            <span>分類: <strong>"{{ $activeCategory->name }}"</strong></span>
+                        @endif
+
+                        <span>找到 <strong>{{ $posts->total() }}</strong> 篇文章</span>
                     </div>
-                @endif
+                </div>
             </form>
         </div>
 

@@ -3,20 +3,29 @@
 namespace App\Http\Repositories;
 
 use App\Models\Post;
+use App\Models\Category;
 
 class PostRepository
 {
     /**
-     * 取得所有文章，支援搜尋和排序功能
+     * 取得所有文章，支援搜尋、排序和分類過濾功能
      *
      * @param string|null $searchTerm 搜尋關鍵字
      * @param string $sortField 排序欄位
      * @param string $sortDirection 排序方向
+     * @param int|null $categoryId 分類ID
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
-    public function getAllPosts($searchTerm = null, $sortField = 'created_at', $sortDirection = 'desc')
+    public function getAllPosts($searchTerm = null, $sortField = 'created_at', $sortDirection = 'desc', $categoryId = null)
     {
-        $query = Post::with('user');
+        $query = Post::with(['user', 'categories']);
+
+        // 按分類過濾
+        if ($categoryId) {
+            $query->whereHas('categories', function ($q) use ($categoryId) {
+                $q->where('categories.id', $categoryId);
+            });
+        }
 
         if ($searchTerm) {
             $this->searchPosts($query, $searchTerm);
@@ -49,7 +58,7 @@ class PostRepository
 
     public function getPostById($id)
     {
-        return Post::with(['user', 'comments.user', 'comments.replies.user'])->find($id);
+        return Post::with(['user', 'comments.user', 'comments.replies.user', 'categories'])->find($id);
     }
 
     public function createPost($data)
@@ -65,5 +74,38 @@ class PostRepository
     public function deletePost($post)
     {
         return $post->delete();
+    }
+
+    /**
+     * 取得所有分類
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getAllCategories()
+    {
+        return Category::all();
+    }
+
+    /**
+     * 取得指定分類
+     *
+     * @param int $id
+     * @return \App\Models\Category|null
+     */
+    public function getCategoryById($id)
+    {
+        return Category::find($id);
+    }
+
+    /**
+     * 更新文章的分類
+     *
+     * @param \App\Models\Post $post
+     * @param array $categoryIds
+     * @return void
+     */
+    public function syncPostCategories($post, $categoryIds)
+    {
+        $post->categories()->sync($categoryIds);
     }
 }

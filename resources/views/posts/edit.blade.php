@@ -18,6 +18,28 @@
 
                     <x-form.input name="content" label="內容" type="textarea" :value="$post->content" />
 
+                    <!-- 分類選擇 -->
+                    <div class="form-control mb-6">
+                        <label class="label">
+                            <span class="label-text font-medium">分類</span>
+                        </label>
+                        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mt-2">
+                            @foreach($categories as $category)
+                                <label class="flex items-center space-x-2 cursor-pointer bg-gray-50 p-2 rounded-lg hover:bg-gray-100 transition-colors">
+                                    <input type="checkbox" name="categories[]" value="{{ $category->id }}"
+                                           class="checkbox checkbox-primary"
+                                           {{ in_array($category->id, old('categories', $selectedCategories)) ? 'checked' : '' }}>
+                                    <span>{{ $category->name }}</span>
+                                </label>
+                            @endforeach
+                        </div>
+                        @error('categories')
+                            <label class="label">
+                                <span class="label-text-alt text-error">{{ $message }}</span>
+                            </label>
+                        @enderror
+                    </div>
+
                     <x-form.buttons submitText="更新文章" />
                 </form>
             </div>

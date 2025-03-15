@@ -40,9 +40,31 @@ class PostController extends Controller
             $sortDirection = 'desc';
         }
 
-        $posts = $this->postService->getAllPosts($searchTerm, $sortField, $sortDirection);
+        // 獲取分類過濾
+        $categoryId = $request->input('category');
+        $activeCategory = null;
 
-        return view('posts.index', compact('posts', 'searchTerm', 'sortField', 'sortDirection'));
+        if ($categoryId) {
+            $activeCategory = $this->postService->getCategoryById($categoryId);
+            // 如果找不到該分類，重置為 null
+            if (!$activeCategory) {
+                $categoryId = null;
+            }
+        }
+
+        // 獲取所有分類以供篩選
+        $categories = $this->postService->getAllCategories();
+
+        $posts = $this->postService->getAllPosts($searchTerm, $sortField, $sortDirection, $categoryId);
+
+        return view('posts.index', compact(
+            'posts',
+            'searchTerm',
+            'sortField',
+            'sortDirection',
+            'categories',
+            'activeCategory'
+        ));
     }
 
     /**
@@ -50,7 +72,8 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view('posts.create');
+        $categories = $this->postService->getAllCategories();
+        return view('posts.create', compact('categories'));
     }
 
     /**
@@ -58,7 +81,14 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request)
     {
-        $this->postService->createPost($request->all());
+        $data = $request->all();
+
+        // 處理分類，如果有選擇的話
+        if ($request->has('categories')) {
+            $data['categories'] = $request->categories;
+        }
+
+        $this->postService->createPost($data);
 
         return redirect()->route('posts.index')->with('success', '文章已建立');
     }
@@ -81,8 +111,12 @@ class PostController extends Controller
     public function edit(string $id)
     {
         $post = $this->postService->getPostById($id);
+        $categories = $this->postService->getAllCategories();
 
-        return view('posts.edit', compact('post'));
+        // 獲取文章當前的分類ID陣列，用於表單預選
+        $selectedCategories = $post->categories->pluck('id')->toArray();
+
+        return view('posts.edit', compact('post', 'categories', 'selectedCategories'));
     }
 
     /**
@@ -90,7 +124,17 @@ class PostController extends Controller
      */
     public function update(UpdatePostRequest $request, Post $post)
     {
-        $this->postService->updatePost($post, $request->all());
+        $data = $request->all();
+
+        // 處理分類，如果有選擇的話
+        if ($request->has('categories')) {
+            $data['categories'] = $request->categories;
+        } else {
+            // 如果沒有選擇任何分類，清空文章的所有分類
+            $data['categories'] = [];
+        }
+
+        $this->postService->updatePost($post, $data);
 
         return redirect()->route('posts.index')->with('success', '文章已更新');
     }

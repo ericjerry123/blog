@@ -20,11 +20,29 @@ class PostController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $posts = $this->postService->getAllPosts();
+        $searchTerm = $request->input('search');
 
-        return view('posts.index', compact('posts'));
+        // 獲取排序參數
+        $sortField = $request->input('sort_field', 'created_at');
+        $sortDirection = $request->input('sort_direction', 'desc');
+
+        // 驗證排序欄位，確保安全
+        $allowedSortFields = ['created_at', 'title', 'updated_at'];
+        if (!in_array($sortField, $allowedSortFields)) {
+            $sortField = 'created_at';
+        }
+
+        // 驗證排序方向
+        $allowedSortDirections = ['asc', 'desc'];
+        if (!in_array($sortDirection, $allowedSortDirections)) {
+            $sortDirection = 'desc';
+        }
+
+        $posts = $this->postService->getAllPosts($searchTerm, $sortField, $sortDirection);
+
+        return view('posts.index', compact('posts', 'searchTerm', 'sortField', 'sortDirection'));
     }
 
     /**

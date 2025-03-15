@@ -11,19 +11,23 @@
                             d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
                     </svg>
                 </label>
-                <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-                    <li><a href="{{ route('posts.edit', $post['id']) }}">編輯</a></li>
-                    <li>
-                        <a href="#"
-                            onclick="event.preventDefault(); document.getElementById('delete-form-{{ $post['id'] }}').submit();">
-                            刪除
-                        </a>
-                        <form id="delete-form-{{ $post['id'] }}" action="{{ route('posts.destroy', $post['id']) }}"
-                            method="POST" class="hidden">
-                            @csrf
-                            @method('DELETE')
-                        </form>
-                    </li>
+                @can('update', $post)
+                    <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                        <li><a href="{{ route('posts.edit', $post['id']) }}">編輯</a></li>
+                    @endcan
+                    @can('delete', $post)
+                        <li>
+                            <a href="#"
+                                onclick="event.preventDefault(); document.getElementById('delete-form-{{ $post['id'] }}').submit();">
+                                刪除
+                            </a>
+                            <form id="delete-form-{{ $post['id'] }}" action="{{ route('posts.destroy', $post['id']) }}"
+                                method="POST" class="hidden">
+                                @csrf
+                                @method('DELETE')
+                            </form>
+                        </li>
+                    @endcan
                 </ul>
             </div>
         </div>

@@ -36,4 +36,12 @@ class Post extends Model
     {
         return $this->hasMany(Comment::class);
     }
+
+    /**
+     * 獲取文章的分類
+     */
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class);
+    }
 }

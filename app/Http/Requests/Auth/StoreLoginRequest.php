@@ -22,7 +22,7 @@ class StoreLoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|email',
+            'email' => 'required|email|exists:users,email',
             'password' => 'required',
         ];
     }
@@ -32,6 +32,7 @@ class StoreLoginRequest extends FormRequest
         return [
             'email.required' => 'Email 是必填的',
             'email.email' => 'Email 格式不正確',
+            'email.exists' => 'Email 不存在',
             'password.required' => '密碼是必填的',
         ];
     }

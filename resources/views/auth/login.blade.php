@@ -2,7 +2,7 @@
     <x-layouts.auth>
         <x-auth.header title="登入帳戶" description="歡迎回來，請輸入您的帳號資訊" />
 
-        <x-auth.card action="{{ route('login.store') }}">
+        <x-auth.card action="{{ route('login.store') }}" method="POST">
             @csrf
 
             <x-form.input type="email" name="email" label="電子郵件" placeholder="請輸入電子郵件" value="{{ old('email') }}"

@@ -48,6 +48,21 @@
                 </svg>
                 {{ $post->view_count ?? 0 }} 次瀏覽
             </div>
+            @if($post->status === 'scheduled')
+            <div class="flex items-center text-amber-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                排程於 {{ $post->scheduled_for->format('Y-m-d H:i') }}
+            </div>
+            @elseif($post->status === 'draft')
+            <div class="flex items-center text-gray-500">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+                草稿
+            </div>
+            @endif
         </div>
 
         <!-- 文章分類標籤 -->

@@ -35,7 +35,9 @@ class LoginController extends Controller
         try {
             return $this->loginService->login($credentials);
         } catch (HttpException $e) {
-            return redirect()->back()->withErrors($e->getMessage());
+            return redirect()->back()
+                ->withInput($request->only('email'))
+                ->withErrors(['email' => $e->getMessage()]);
         }
     }
 

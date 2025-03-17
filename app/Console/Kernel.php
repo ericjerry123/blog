@@ -12,7 +12,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
+        // 每分鐘檢查一次是否有需要發布的排程文章
+        $schedule->command('blog:publish-scheduled-posts')->everyMinute();
     }
 
     /**

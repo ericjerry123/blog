@@ -31,6 +31,12 @@ Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
 
 Route::resource('posts', PostController::class);
 
+// 排程文章相關路由
+Route::middleware(['auth'])->group(function () {
+    Route::get('/scheduled-posts', [PostController::class, 'scheduledPosts'])->name('posts.scheduled');
+    Route::patch('/posts/{post}/publish-now', [PostController::class, 'publishNow'])->name('posts.publish-now');
+});
+
 Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
 Route::get('/comments/{comment}/edit', [CommentController::class, 'edit'])->name('comments.edit');
 Route::put('/comments/{comment}', [CommentController::class, 'update'])->name('comments.update');

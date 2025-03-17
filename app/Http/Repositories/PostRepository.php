@@ -138,4 +138,19 @@ class PostRepository
     {
         return $post->markAsPublished();
     }
+
+    /**
+     * 獲取指定用戶的排程文章
+     *
+     * @param int $userId
+     * @return \Illuminate\Pagination\LengthAwarePaginator
+     */
+    public function getScheduledPostsByUser($userId)
+    {
+        return Post::with(['categories'])
+            ->where('user_id', $userId)
+            ->where('status', 'scheduled')
+            ->orderBy('scheduled_for', 'asc')
+            ->paginate(10);
+    }
 }

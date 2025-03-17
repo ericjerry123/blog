@@ -3,6 +3,7 @@
 namespace App\Http\Services;
 
 use App\Http\Repositories\PostRepository;
+use App\Models\Post;
 
 class PostService
 {
@@ -85,5 +86,27 @@ class PostService
     public function getCategoryById($id)
     {
         return $this->postRepository->getCategoryById($id);
+    }
+
+    /**
+     * 獲取指定用戶的排程文章
+     *
+     * @param int $userId
+     * @return \Illuminate\Pagination\LengthAwarePaginator
+     */
+    public function getScheduledPostsByUser($userId)
+    {
+        return $this->postRepository->getScheduledPostsByUser($userId);
+    }
+
+    /**
+     * 發布排程文章
+     *
+     * @param Post $post
+     * @return bool
+     */
+    public function publishScheduledPost($post)
+    {
+        return $this->postRepository->publishScheduledPost($post);
     }
 }

@@ -163,4 +163,31 @@ class PostController extends Controller
 
         return redirect()->route('posts.index')->with('success', '文章已刪除');
     }
+
+    /**
+     * 顯示用戶的排程文章
+     */
+    public function scheduledPosts(Request $request)
+    {
+        // 獲取當前已登入用戶的排程文章
+        $posts = $this->postService->getScheduledPostsByUser(auth()->id());
+
+        return view('posts.scheduled', compact('posts'));
+    }
+
+    /**
+     * 立即發布排程文章
+     */
+    public function publishNow(Post $post)
+    {
+        // 確認文章屬於當前用戶且為排程狀態
+        if (auth()->id() !== $post->user_id || $post->status !== 'scheduled') {
+            return redirect()->route('posts.scheduled')->with('error', '無法發布此文章');
+        }
+
+        // 發布文章
+        $this->postService->publishScheduledPost($post);
+
+        return redirect()->route('posts.index')->with('success', '文章已立即發布');
+    }
 }

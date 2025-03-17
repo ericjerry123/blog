@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users');
             $table->string('title');
-            $table->string('excerpt');
+            $table->text('excerpt');
             $table->text('content');
 
             /**TODO: 添加圖片, 分類, 標籤 */

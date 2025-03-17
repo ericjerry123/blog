@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::table('posts', function (Blueprint $table) {
             $table->timestamp('scheduled_for')->nullable();
+            $table->enum('status', ['draft', 'published', 'scheduled'])->default('published');
         });
     }
 
@@ -23,6 +24,7 @@ return new class extends Migration
     {
         Schema::table('posts', function (Blueprint $table) {
             $table->dropColumn('scheduled_for');
+            $table->dropColumn('status');
         });
     }
 };

@@ -7,6 +7,7 @@ use App\Http\Requests\UpdatePostRequest;
 use App\Http\Services\PostService;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use App\Events\PostViewed;
 
 class PostController extends Controller
 {
@@ -101,6 +102,9 @@ class PostController extends Controller
         $post = $this->postService->getPostById($id);
         // 獲取文章的留言
         $comments = $post->comments()->with(['user', 'replies.user'])->orderBy('created_at', 'desc')->get();
+
+        // 觸發文章瀏覽事件
+        event(new PostViewed($post));
 
         return view('posts.show', compact('post', 'comments'));
     }

@@ -20,6 +20,15 @@ class PostRepository
     {
         $query = Post::with(['user', 'categories']);
 
+        // 只顯示已發布的文章
+        $query->where(function($q) {
+            $q->where('status', 'published')
+              ->orWhere(function($sq) {
+                  $sq->where('status', 'scheduled')
+                     ->where('scheduled_for', '<=', now());
+              });
+        });
+
         // 按分類過濾
         if ($categoryId) {
             $query->whereHas('categories', function ($q) use ($categoryId) {
@@ -107,5 +116,26 @@ class PostRepository
     public function syncPostCategories($post, $categoryIds)
     {
         $post->categories()->sync($categoryIds);
+    }
+
+    /**
+     * 取得所有需要發布的排程文章
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getScheduledPostsDueForPublishing()
+    {
+        return Post::dueForPublishing()->get();
+    }
+
+    /**
+     * 將排程文章發布
+     *
+     * @param Post $post
+     * @return bool
+     */
+    public function publishScheduledPost(Post $post)
+    {
+        return $post->markAsPublished();
     }
 }

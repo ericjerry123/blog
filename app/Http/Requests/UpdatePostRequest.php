@@ -29,6 +29,19 @@ class UpdatePostRequest extends FormRequest
             'content' => 'required|string',
             'categories' => 'nullable|array',
             'categories.*' => 'exists:categories,id',
+            'status' => 'required|in:draft,published,scheduled',
+            'scheduled_for' => 'nullable|required_if:status,scheduled|date|after_or_equal:now',
+        ];
+    }
+
+    /**
+     * 獲取驗證錯誤的自定義消息
+     */
+    public function messages(): array
+    {
+        return [
+            'scheduled_for.required_if' => '當狀態為排程發布時，必須設定發布時間',
+            'scheduled_for.after_or_equal' => '排程發布時間必須是未來的時間',
         ];
     }
 }

@@ -84,6 +84,12 @@ class PostController extends Controller
     {
         $data = $request->all();
 
+        // 處理排程發布
+        if ($data['status'] !== 'scheduled') {
+            // 如果不是排程發布，則清空排程時間
+            $data['scheduled_for'] = null;
+        }
+
         // 處理分類，如果有選擇的話
         if ($request->has('categories')) {
             $data['categories'] = $request->categories;
@@ -129,6 +135,11 @@ class PostController extends Controller
     public function update(UpdatePostRequest $request, Post $post)
     {
         $data = $request->all();
+
+        if ($data['status'] !== 'scheduled') {
+            // 如果不是排程發布，則清空排程時間
+            $data['scheduled_for'] = null;
+        }
 
         // 處理分類，如果有選擇的話
         if ($request->has('categories')) {

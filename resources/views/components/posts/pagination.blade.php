@@ -13,11 +13,11 @@
                     @if ($paginator->onFirstPage())
                         <button class="btn btn-sm btn-disabled" disabled>&laquo; 上一頁</button>
                     @else
-                        <a href="{{ $paginator->previousPageUrl() }}" class="btn btn-sm">&laquo; 上一頁</a>
+                        <a href="{{ $paginator->appends(request()->query())->previousPageUrl() }}" class="btn btn-sm">&laquo; 上一頁</a>
                     @endif
 
                     {{-- 頁碼 --}}
-                    @foreach ($paginator->getUrlRange(max(1, $paginator->currentPage() - 2), min($paginator->lastPage(), $paginator->currentPage() + 2)) as $page => $url)
+                    @foreach ($paginator->appends(request()->query())->getUrlRange(max(1, $paginator->currentPage() - 2), min($paginator->lastPage(), $paginator->currentPage() + 2)) as $page => $url)
                         @if ($page == $paginator->currentPage())
                             <button class="btn btn-sm btn-active" aria-current="page">{{ $page }}</button>
                         @else
@@ -27,7 +27,7 @@
 
                     {{-- 下一頁按鈕 --}}
                     @if ($paginator->hasMorePages())
-                        <a href="{{ $paginator->nextPageUrl() }}" class="btn btn-sm">下一頁 &raquo;</a>
+                        <a href="{{ $paginator->appends(request()->query())->nextPageUrl() }}" class="btn btn-sm">下一頁 &raquo;</a>
                     @else
                         <button class="btn btn-sm btn-disabled" disabled>下一頁 &raquo;</button>
                     @endif
